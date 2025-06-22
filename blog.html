@@ -1,0 +1,163 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Nutritional Gymnastics</title>
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap">
+  <style>
+    * {
+      box-sizing: border-box;
+    }
+
+    body {
+      font-family: 'Inter', sans-serif;
+      margin: 0;
+      background: #fefefe;
+      color: #333;
+    }
+
+    header {
+      background: linear-gradient(135deg, #0072b1, #005080);
+      color: white;
+      padding: 40px 20px 30px;
+      text-align: center;
+    }
+
+    header h1 {
+      margin: 0;
+      font-size: 2rem;
+    }
+
+    header p {
+      font-style: italic;
+      opacity: 0.9;
+    }
+
+    main {
+      max-width: 750px;
+      margin: auto;
+      padding: 20px;
+    }
+
+    article section {
+      margin-bottom: 2em;
+    }
+
+    h2 {
+      color: #005080;
+    }
+
+    ul {
+      padding-left: 20px;
+    }
+
+    li {
+      margin-bottom: 10px;
+    }
+
+    blockquote {
+      border-left: 4px solid #0072b1;
+      background: #eef6fb;
+      padding: 10px 15px;
+      font-style: italic;
+      margin: 1.5em 0;
+    }
+
+    .cta {
+      display: block;
+      background: #0072b1;
+      color: white;
+      padding: 12px;
+      text-align: center;
+      text-decoration: none;
+      border-radius: 5px;
+      margin-top: 20px;
+    }
+
+    .share {
+      text-align: center;
+      margin-top: 30px;
+    }
+
+    .share button, #pdf-btn {
+      background: #0072b1;
+      color: white;
+      border: none;
+      padding: 10px 18px;
+      margin: 5px;
+      border-radius: 5px;
+      font-size: 16px;
+      cursor: pointer;
+    }
+
+    .responsive-img {
+      width: 100%;
+      border-radius: 8px;
+      margin: 20px 0;
+      max-height: 300px;
+      object-fit: cover;
+    }
+
+    footer {
+      text-align: center;
+      background: #f0f0f0;
+      padding: 15px;
+      font-size: 0.9em;
+      color: #666;
+    }
+
+    @media (max-width: 600px) {
+      header h1 {
+        font-size: 1.5rem;
+      }
+
+      main {
+        padding: 15px;
+      }
+    }
+  </style>
+</head>
+<body>
+
+  <div id="blog-content">
+    <header>
+      <h1>Nutritional Gymnastics</h1>
+      <p>Because what you eat shouldn’t be a full-time job</p>
+    </header>
+
+    <main>
+      <article>
+        <img src="https://source.unsplash.com/featured/?healthy-food" alt="Healthy food" class="responsive-img" />
+
+        <section>
+          <h2>What If Meal Planning Was as Agile as Your Workout?</h2>
+          <p>Most professionals crush their gym routines but flounder when it comes to food. Why? Because nutrition feels rigid, boring, and frankly — exhausting.</p>
+          <p>Enter: <strong>Nutritional Gymnastics</strong>. A flexible, sustainable approach to eating that’s designed for high-performance people — just like your workout routine.</p>
+        </section>
+
+        <section>
+          <h2>Here’s the 3-Point Flip That Changed My Life:</h2>
+          <ul>
+            <li><strong>1. Flexible Proteins:</strong> Keep 2–3 versatile protein sources ready to go. Eggs. Greek Yogurt. Rotisserie chicken.</li>
+            <li><strong>2. Smart Carbs, Not No Carbs:</strong> Focus on timing — carbs around your workout, fiber throughout your day.</li>
+            <li><strong>3. Color Counts:</strong> Add color to every plate. Greens, reds, oranges. It’s not for Instagram. It’s for your gut.</li>
+          </ul>
+        </section>
+
+        <section>
+          <blockquote>
+            "You don’t need a 6-meal-per-day spreadsheet. You need a system that adapts to your real life."
+          </blockquote>
+        </section>
+
+        <section>
+          <h2>This Is for the Hustlers</h2>
+          <p>If you're juggling Zoom calls, reps, deadlines and dumbbells — this is your sign. Stop obsessing over ‘perfect diets.’ Start integrating simple nutrition into your high-performance lifestyle.</p>
+          <p>It's not about tracking everything. It's about tracking what matters — consistency, energy, and recovery.</p>
+        </section>
+
+        <section class="share">
+          <p><strong>💬 Let’s spark a thread:</strong> What’s your go-to no-brainer healthy meal?</p>
+          <button onclick="copyLink()">🔗 Copy Link</button>
+          <button id="pdf-btn">📄 Export as PDF</button>

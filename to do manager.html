@@ -1,0 +1,217 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>To-Do Manager</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      padding: 20px;
+      background: #f7f7f7;
+    }
+    header, footer {
+      text-align: center;
+      margin-bottom: 20px;
+    }
+    form {
+      display: flex;
+      gap: 10px;
+      flex-wrap: wrap;
+      margin-bottom: 20px;
+    }
+    input[type="text"], input[type="datetime-local"] {
+      padding: 10px;
+      font-size: 16px;
+    }
+    button {
+      padding: 10px 15px;
+      font-size: 16px;
+      cursor: pointer;
+    }
+    ul {
+      list-style: none;
+      padding: 0;
+    }
+    li {
+      background: #fff;
+      border: 1px solid #ddd;
+      padding: 10px;
+      margin-bottom: 10px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      cursor: grab;
+    }
+    li.completed span {
+      text-decoration: line-through;
+      color: gray;
+    }
+    .filters {
+      margin-bottom: 20px;
+    }
+    .filters button {
+      margin-right: 10px;
+    }
+    .due-soon {
+      color: red;
+      font-weight: bold;
+      margin-left: 10px;
+    }
+  </style>
+</head>
+<body>
+
+  <header>
+    <h1>To-Do Manager</h1>
+  </header>
+
+  <main>
+    <section aria-label="Add task">
+      <form id="todo-form">
+        <input type="text" id="todo-input" placeholder="New Task..." required />
+        <input type="datetime-local" id="due-datetime" required />
+        <button type="submit">Add Task</button>
+      </form>
+    </section>
+
+    <section class="filters">
+      <button data-filter="all">All</button>
+      <button data-filter="active">Active</button>
+      <button data-filter="completed">Completed</button>
+    </section>
+
+    <section aria-label="Task List">
+      <ul id="todo-list"></ul>
+    </section>
+  </main>
+
+  <footer>
+    <p>&copy; 2025 To-Do Manager</p>
+  </footer>
+
+  <!-- Sound Effect -->
+  <audio id="complete-sound" src="https://www.soundjay.com/buttons/sounds/button-3.mp3" preload="auto"></audio>
+
+  <script>
+    const form = document.getElementById("todo-form");
+    const input = document.getElementById("todo-input");
+    const dueInput = document.getElementById("due-datetime");
+    const list = document.getElementById("todo-list");
+    const completeSound = document.getElementById("complete-sound");
+    let filter = 'all';
+
+    let todos = JSON.parse(localStorage.getItem("todos")) || [];
+
+    function saveTodos() {
+      localStorage.setItem("todos", JSON.stringify(todos));
+    }
+
+    function renderTodos() {
+      list.innerHTML = "";
+
+      const filtered = todos.filter(todo => {
+        if (filter === 'all') return true;
+        if (filter === 'active') return !todo.completed;
+        if (filter === 'completed') return todo.completed;
+      });
+
+      filtered.forEach((todo, index) => {
+        const li = document.createElement("li");
+        li.setAttribute("draggable", "true");
+        li.className = todo.completed ? "completed" : "";
+        li.dataset.index = index;
+
+        const dueDate = new Date(todo.dueDate);
+        const now = new Date();
+        const isDueSoon = !todo.completed && (dueDate - now <= 3600000 && dueDate >= now);
+
+        li.innerHTML = `
+          <span>
+            ${todo.text} 
+            <small>Due: ${new Date(todo.dueDate).toLocaleString()}</small>
+            ${isDueSoon ? '<span class="due-soon">⚠️ Due Soon</span>' : ''}
+          </span>
+          <div>
+            <button onclick="toggleComplete(${index})">${todo.completed ? "Undo" : "Complete"}</button>
+            <button onclick="deleteTodo(${index})">Delete</button>
+          </div>
+        `;
+        list.appendChild(li);
+      });
+      addDragEvents();
+    }
+
+    form.addEventListener("submit", e => {
+      e.preventDefault();
+      const text = input.value.trim();
+      const dueDate = dueInput.value;
+      if (!text || !dueDate) return;
+      todos.push({ text, dueDate, completed: false });
+      input.value = "";
+      dueInput.value = "";
+      saveTodos();
+      renderTodos();
+    });
+
+    function toggleComplete(index) {
+      todos[index].completed = !todos[index].completed;
+      if (todos[index].completed) {
+        completeSound.play();
+      }
+      saveTodos();
+      renderTodos();
+    }
+
+    function deleteTodo(index) {
+      todos.splice(index, 1);
+      saveTodos();
+      renderTodos();
+    }
+
+    document.querySelectorAll(".filters button").forEach(button => {
+      button.addEventListener("click", () => {
+        filter = button.dataset.filter;
+        renderTodos();
+      });
+    });
+
+    function addDragEvents() {
+      const draggables = document.querySelectorAll("li");
+      let dragStartIndex;
+
+      draggables.forEach(item => {
+        item.addEventListener("dragstart", function () {
+          dragStartIndex = +this.dataset.index;
+        });
+
+        item.addEventListener("dragover", function (e) {
+          e.preventDefault();
+        });
+
+        item.addEventListener("drop", function () {
+          const dragEndIndex = +this.dataset.index;
+          const temp = todos[dragStartIndex];
+          todos[dragStartIndex] = todos[dragEndIndex];
+          todos[dragEndIndex] = temp;
+          saveTodos();
+          renderTodos();
+        });
+      });
+    }
+
+    // Reminder check every 30 seconds
+    setInterval(() => {
+      const now = new Date();
+      todos.forEach(todo => {
+        const due = new Date(todo.dueDate);
+        if (!todo.completed && due - now <= 60000 && due - now > 0) {
+          alert(`Reminder: "${todo.text}" is due soon!`);
+        }
+      });
+    }, 30000); // every 30 sec
+
+    renderTodos();
+  </script>
+</body>
+</html>
